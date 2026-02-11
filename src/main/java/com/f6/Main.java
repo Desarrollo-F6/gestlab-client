@@ -59,7 +59,7 @@ public class Main {
             logger.info("Check-in event emitted with machine name: " + machineName);
 
 
-
+            // Evento pcCheck
             socket.on(socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
