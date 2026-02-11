@@ -47,17 +47,17 @@ public class Functions {
 
 
 
-    // Method 1: Force shutdown this computer
+    // Apagado de computadora
     public static void apagarComputadora() throws IOException {
         Runtime.getRuntime().exec("shutdown /s /f /t 0");
     }
 
-    // Method 2: Force restart this computer
+    // Reinicio de computadora
     public static void reiniciarComputadora() throws IOException {
         Runtime.getRuntime().exec("shutdown /r /f /t 0");
     }
 
-    // Method 3: Lock the computer as if using Windows + L
+    // Bloqueo de computadora
     public static void bloquearComputadora() throws IOException {
         Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
     }

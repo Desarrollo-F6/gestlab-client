@@ -61,7 +61,7 @@ public class Main {
             logger.info("Check-in event emitted with machine name: " + machineName);
 
 
-            // Evento pcCheck
+            // * Evento pcCheck
             socket.on(socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
@@ -76,7 +76,7 @@ public class Main {
                 }
             });
 
-            // Evento Bloqueo Equipo
+            // * Evento Bloqueo Equipo
             socket.on("pcBloqueoObjetivo", new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
@@ -88,7 +88,7 @@ public class Main {
                 }
             });
 
-            // Evento Reinicio Equipo
+            // * Evento Reinicio Equipo
             socket.on("pcReinicioObjetivo", new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
@@ -100,7 +100,7 @@ public class Main {
                 }
             });
 
-            // Evento Apagado Computadora
+            // * Evento Apagado Computadora
             socket.on("pcApagadoObjetivo", new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
@@ -112,6 +112,17 @@ public class Main {
                 }
             });
 
+            // * Evento Reinicio computadora
+            socket.on("pcReinicioObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.reiniciarComputadora();
+                    } catch (RuntimeException | IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
 
 
             socket.connect();

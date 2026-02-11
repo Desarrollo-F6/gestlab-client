@@ -506,3 +506,9 @@ Feb 11, 2026 4:22:36 PM com.f6.Main main
 INFO: Conexion exitosa: io.socket.client.Manager@3cbbc1e0
 Feb 11, 2026 4:22:36 PM com.f6.Main main
 INFO: Check-in event emitted with machine name: LabcompDev-6
+Feb 11, 2026 4:33:49 PM com.f6.Main main
+INFO: Activado el SystemTray
+Feb 11, 2026 4:33:49 PM com.f6.Main main
+INFO: Conexion exitosa: io.socket.client.Manager@47f6473
+Feb 11, 2026 4:33:49 PM com.f6.Main main
+INFO: Check-in event emitted with machine name: LabcompDev-6
