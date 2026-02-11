@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class Functions {
 
-    private TrayIcon trayIcon;
+    private static TrayIcon trayIcon;
 
 
 
@@ -27,27 +27,43 @@ public class Functions {
         }
     }
 
+    public void mostrarNotifiacionPrueba(String mensaje) throws Exception{
+        if(SystemTray.isSupported()) {
+            SystemTray tray = SystemTray.getSystemTray();
+
+            Image image = Toolkit.getDefaultToolkit().createImage("icon.png"); // Replace with your icon path
+            TrayIcon trayIcon = new TrayIcon(image, "Mensaje Prueba");
+
+            trayIcon.setImageAutoSize(true);
+            trayIcon.setToolTip("Mensaje Prueba");
+            tray.add(trayIcon);
+
+            trayIcon.displayMessage("Mensaje Prueba", mensaje, TrayIcon.MessageType.INFO);
+
+        }
+    }
+
 
 
 
 
     // Method 1: Force shutdown this computer
-    public void apagarComputadora() throws IOException {
+    public static void apagarComputadora() throws IOException {
         Runtime.getRuntime().exec("shutdown /s /f /t 0");
     }
 
     // Method 2: Force restart this computer
-    public void reiniciarComputadora() throws IOException {
+    public static void reiniciarComputadora() throws IOException {
         Runtime.getRuntime().exec("shutdown /r /f /t 0");
     }
 
     // Method 3: Lock the computer as if using Windows + L
-    public void bloquearComputadora() throws IOException {
+    public static void bloquearComputadora() throws IOException {
         Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
     }
 
     // Method 4: Show a message using Windows notifications
-    public String mostrarMensaje(String mensaje) throws IOException {
+    public static String mostrarMensaje(String mensaje) throws IOException {
         //String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
         String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
         Runtime.getRuntime().exec(exePath + " a asdasdasd");

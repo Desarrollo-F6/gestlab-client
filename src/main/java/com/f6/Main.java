@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -73,6 +75,44 @@ public class Main {
                     socket.emit("pcCheck", data);
                 }
             });
+
+            // Evento Bloqueo Equipo
+            socket.on("pcBloqueoObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.bloquearComputadora();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            // Evento Reinicio Equipo
+            socket.on("pcReinicioObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.reiniciarComputadora();
+                    } catch (RuntimeException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            // Evento Apagado Computadora
+            socket.on("pcApagadoObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.apagarComputadora();
+                    } catch (RuntimeException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
 
             socket.connect();
         }catch (IOException e) {
