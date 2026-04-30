@@ -1,9 +1,11 @@
 package com.f6;
 
 import com.f6.functions.Functions;
+import com.f6.functions.Lector;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.ls.LSOutput;
@@ -46,7 +48,7 @@ public class Main {
 
             //Cambiar segun se necesite
 //           final Socket socket = IO.socket("https://notilab-ws.urbe.edu/"); //websocket produccion
-            final Socket socket = IO.socket("http://10.200.20.83:3002"); //websocket local f6
+            final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6
 
 
 
@@ -124,6 +126,69 @@ public class Main {
                 }
             });
 
+            // * Evento Registrar una huella
+            socket.on("escaneoHuella", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try {
+                        // NestJS envía los datos en el primer argumento
+                        Object data = objects[0];
+                        String idUsuario;
+
+                        if (data instanceof JSONObject) {
+                            // Si es JSONObject, extraemos con seguridad
+                            idUsuario = String.valueOf(((JSONObject) data).get("idUsuario"));
+                        } else if (data instanceof java.util.Map) {
+                            // A veces Socket.io lo mapea automáticamente a un Map
+                            idUsuario = String.valueOf(((java.util.Map) data).get("idUsuario"));
+                        } else {
+                            idUsuario = "desconocido";
+                        }
+
+                        logger.info("Escaneando para usuario ID: " + idUsuario);
+
+                        // Realizar el escaneo síncrono[cite: 12]
+                        String huella = Lector.scanFinger();
+
+                        // Construir respuesta
+                        JSONObject response = new JSONObject();
+                        response.put("idUsuario", idUsuario);
+                        response.put("huella", huella);
+
+                        // Emitir de vuelta al servidor NestJS
+                        socket.emit("createHuellaPreparador", response);
+
+                    } catch (Exception e) {
+                        logger.info("Error en el proceso de escaneo: " + e.getMessage());
+                        // Enviar error al servidor para que no se quede colgado
+                        socket.emit("createHuellaPreparadorError", e.getMessage());
+                    }
+                }
+            });
+
+            // * Evento de comparacion de huellas
+            socket.on("comparacionHuellas", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try {
+                        JSONArray huellasRecibidas = (JSONArray) objects[0];
+                        logger.info("Iniciando comparación con " + huellasRecibidas.length() + " registros.");
+
+                        String resultado = Lector.verifyFinger(huellasRecibidas);
+
+                        // Cerramos el hardware inmediatamente después de la captura
+                        Lector.CloseDevice();
+
+                        // Emitimos el resultado. NestJS ahora sabe ignorar este String.
+                        socket.emit("compararHuellaPreparador", resultado);
+                        logger.info("Resultado enviado: " + resultado);
+
+                    } catch (Exception e) {
+                        Lector.CloseDevice();
+                        socket.emit("createHuellaPreparadorError", e.getMessage());
+                    }
+                }
+            });
 
             socket.connect();
         }catch (IOException e) {
