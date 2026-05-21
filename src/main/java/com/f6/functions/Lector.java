@@ -28,6 +28,7 @@ public class Lector {
     private static int fid = 0, ret = 0; //ID de la huella
 
     private static String lastBase64Template = "";
+    private static String lastBlobTemplate = "";
     private static boolean isCaptured = false;
 
     //La hanchura de la huella
@@ -187,6 +188,17 @@ public class Lector {
         return "Hola mundo";
     }
 
+    public static void resetLectorState() {
+        mbStop = true;
+        isCaptured = false;
+        lastBase64Template = "";
+        // Limpiar el buffer de imagen con ceros para que no quede rastro de la anterior
+        if (imgBuffer != null) {
+            java.util.Arrays.fill(imgBuffer, (byte) 0);
+        }
+        System.out.println("Estado del lector reiniciado para nueva captura.");
+    }
+
     //Close the device
     public static void CloseDevice() {
         mbStop = true;
@@ -203,6 +215,7 @@ public class Lector {
             FingerprintSensorEx.CloseDevice(devHandle);
             devHandle = 0;
         }
+        resetLectorState();
         FingerprintSensorEx.Terminate();
     }
 
@@ -228,12 +241,14 @@ public class Lector {
         mbStop = false;
         isCaptured = false;
         lastBase64Template = "";
+        lastBlobTemplate = "";
 
         // 2. Hilo de captura corregido
         new Thread(() -> {
             while (!mbStop && !isCaptured) {
                 byte[] template = new byte[2048];
                 int[] templateLen = new int[]{2048};
+
 
                 // LLAMADA ÚNICA: Captura imagen y template a la vez
                 int result = FingerprintSensorEx.AcquireFingerprint(devHandle, imgBuffer, template, templateLen);
@@ -272,8 +287,6 @@ public class Lector {
         }
     }
 
-    // En Lector.java
-
     public static String verifyFinger(JSONArray huellasArray) {
         if (devHandle == 0 || imgBuffer == null) {
             openDevice();
@@ -304,9 +317,4 @@ public class Lector {
             return "ERROR: " + e.getMessage();
         }
     }
-
-
-//    public void compare(){
-//        FingerprintSensorEx.
-//    }
 }

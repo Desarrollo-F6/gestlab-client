@@ -47,8 +47,9 @@ public class Main {
             logger.info("Activado el SystemTray");
 
             //Cambiar segun se necesite
-//           final Socket socket = IO.socket("https://notilab-ws.urbe.edu/"); //websocket produccion
-            final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6
+//           final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
+//            final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
+            final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
 
 
 
@@ -133,7 +134,7 @@ public class Main {
                     try {
                         // NestJS envía los datos en el primer argumento
                         Object data = objects[0];
-                        String idUsuario;
+                        String idUsuario = "";
 
                         if (data instanceof JSONObject) {
                             // Si es JSONObject, extraemos con seguridad
@@ -149,14 +150,28 @@ public class Main {
 
                         // Realizar el escaneo síncrono[cite: 12]
                         String huella = Lector.scanFinger();
+//                        System.out.println(huella);
 
-                        // Construir respuesta
-                        JSONObject response = new JSONObject();
-                        response.put("idUsuario", idUsuario);
-                        response.put("huella", huella);
+                        if(huella.equalsIgnoreCase("Timeout: No se detectó huella")){
+                            JSONObject response = new JSONObject();
+                            response.put("idUsuario", idUsuario);
+                            response.put("huella", huella);
+                            response.put("status", "ERROR");
+//                            logger.info(response.toString());
+                            socket.emit("createHuellaPreparador", response);
+//                            return;
+                        }
 
-                        // Emitir de vuelta al servidor NestJS
-                        socket.emit("createHuellaPreparador", response);
+                         else if(!huella.isEmpty()){
+                            JSONObject response = new JSONObject();
+                            response.put("idUsuario", idUsuario);
+                            response.put("huella", huella);
+                            response.put("status", "OK");
+                            socket.emit("createHuellaPreparador", response);
+                        }
+
+
+
 
                     } catch (Exception e) {
                         logger.info("Error en el proceso de escaneo: " + e.getMessage());
@@ -171,19 +186,32 @@ public class Main {
                 @Override
                 public void call(Object... objects) {
                     try {
-                        JSONArray huellasRecibidas = (JSONArray) objects[0];
-                        logger.info("Iniciando comparación con " + huellasRecibidas.length() + " registros.");
+                        logger.info("Inicio la comparacion de huellas");
+                        // Nest envía un objeto: { idUsuario: "...", huellas: [...] }
+                        JSONObject incomingData = (JSONObject) objects[0];
 
-                        String resultado = Lector.verifyFinger(huellasRecibidas);
+//                        logger.info("incomingData: " + incomingData.toString());
+                        String idUsuario = String.valueOf(incomingData.get("idUsuario"));
+                        JSONArray listaHuellas = incomingData.getJSONArray("huellas");
 
-                        // Cerramos el hardware inmediatamente después de la captura
+//                        logger.info(listaHuellas.toString());
+//                        logger.info("Comparando huellas para usuario: " + idUsuario);
+
+                        // Pasamos el array de la DB al método de verificación
+                        String resultado = Lector.verifyFinger(listaHuellas);
+//                        logger.info("resultado: "+ resultado);
                         Lector.CloseDevice();
 
-                        // Emitimos el resultado. NestJS ahora sabe ignorar este String.
-                        socket.emit("compararHuellaPreparador", resultado);
-                        logger.info("Resultado enviado: " + resultado);
+                        // DEVOLVEMOS UN OBJETO con el ID para que Nest no lo pierda
+                        JSONObject response = new JSONObject();
+                        response.put("idUsuario", idUsuario);
+                        response.put("status", resultado);
+//                        logger.info(response.toString());
+
+                        socket.emit("compararHuellaPreparador", response);
 
                     } catch (Exception e) {
+                        logger.info("Error: " + e.getMessage());
                         Lector.CloseDevice();
                         socket.emit("createHuellaPreparadorError", e.getMessage());
                     }
