@@ -48,8 +48,8 @@ public class Main {
 
             //Cambiar segun se necesite
 //           final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
-//            final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
-            final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
+            final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
+//            final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
 
 
 
@@ -181,38 +181,83 @@ public class Main {
                 }
             });
 
+//            // * Evento de comparacion de huellas
+//            socket.on("comparacionHuellas", new Emitter.Listener() {
+//                @Override
+//                public void call(Object... objects) {
+//                    try {
+//                        logger.info("Inicio la comparacion de huellas");
+//                        // Nest envía un objeto: { idUsuario: "...", huellas: [...] }
+//                        JSONObject incomingData = (JSONObject) objects[0];
+//
+////                        logger.info("incomingData: " + incomingData.toString());
+//                        String idUsuario = String.valueOf(incomingData.get("idUsuario"));
+//
+//                        String tipoUsuario = String.valueOf(incomingData.get("tipoUsuario"));
+//
+//                        logger.info(idUsuario + " " + tipoUsuario );
+//                        JSONArray listaHuellas = incomingData.getJSONArray("huellas");
+//
+////                        logger.info(listaHuellas.toString());
+////                        logger.info("Comparando huellas para usuario: " + idUsuario);
+//
+//                        // Pasamos el array de la DB al método de verificación
+//                        String resultado = Lector.verifyFinger(listaHuellas);
+////                        logger.info("resultado: "+ resultado);
+////                        Lector.CloseDevice();
+//
+//                        // DEVOLVEMOS UN OBJETO con el ID para que Nest no lo pierda
+//                        JSONObject response = new JSONObject();
+//                        response.put("idUsuario", idUsuario);
+//                        response.put("status", resultado);
+////                        logger.info(response.toString());
+//
+//                        if(tipoUsuario.equals("profesor")){
+//                            socket.emit("compararHuellaProfesor", response);
+//                        } else {
+//                            socket.emit("compararHuellaPreparador", response);
+//                        }
+//
+//
+//
+//                    } catch (Exception e) {
+//                        logger.info("Error: " + e.getMessage());
+////                        Lector.CloseDevice();
+//                        socket.emit("createHuellaPreparadorError", e.getMessage());
+//                    }
+//                }
+//            });
+
             // * Evento de comparacion de huellas
             socket.on("comparacionHuellas", new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
                     try {
                         logger.info("Inicio la comparacion de huellas");
-                        // Nest envía un objeto: { idUsuario: "...", huellas: [...] }
                         JSONObject incomingData = (JSONObject) objects[0];
 
-//                        logger.info("incomingData: " + incomingData.toString());
                         String idUsuario = String.valueOf(incomingData.get("idUsuario"));
+                        String tipoUsuario = String.valueOf(incomingData.get("tipoUsuario"));
+                        logger.info(idUsuario + " " + tipoUsuario );
                         JSONArray listaHuellas = incomingData.getJSONArray("huellas");
-
-//                        logger.info(listaHuellas.toString());
-//                        logger.info("Comparando huellas para usuario: " + idUsuario);
 
                         // Pasamos el array de la DB al método de verificación
                         String resultado = Lector.verifyFinger(listaHuellas);
-//                        logger.info("resultado: "+ resultado);
-                        Lector.CloseDevice();
 
-                        // DEVOLVEMOS UN OBJETO con el ID para que Nest no lo pierda
+                        // !!! ELIMINADO: Lector.CloseDevice(); <--- Ya no cerramos el hardware aquí
+
                         JSONObject response = new JSONObject();
                         response.put("idUsuario", idUsuario);
                         response.put("status", resultado);
-//                        logger.info(response.toString());
 
-                        socket.emit("compararHuellaPreparador", response);
+                        if(tipoUsuario.equals("profesor")){
+                            socket.emit("compararHuellaProfesor", response);
+                        } else {
+                            socket.emit("compararHuellaPreparador", response);
+                        }
 
                     } catch (Exception e) {
                         logger.info("Error: " + e.getMessage());
-                        Lector.CloseDevice();
                         socket.emit("createHuellaPreparadorError", e.getMessage());
                     }
                 }

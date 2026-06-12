@@ -21,6 +21,8 @@ dependencies {
     implementation 'io.socket:socket.io-client:2.0.1'
     implementation 'org.json:json:20210307'
 
+    implementation 'com.machinezoo.sourceafis:sourceafis:3.18.1'
+
     // Dependencia captahuellas ZKTeco[cite: 14]
     // Si tienes el JAR en la carpeta /lib, Gradle lo detectará por nombre y versión
     implementation 'com.zkteco:zkfinger:2.0'
