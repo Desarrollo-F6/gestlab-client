@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://microsoft.com/wix/2006/wi">
+
+    <Product Name="Gestlab Client"
+             Id="da3f18e2-c518-4903-883a-861053a4792f"
+             UpgradeCode="c871dfa5-671e-4b68-b715-db8754b23114"
+             Language="1033"
+             Version="1.0.0"
+             Manufacturer="Gestlab">
+
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+        <Media Id="1" Cabinet="gabinete.cab" EmbedCab="yes" />
+
+        <!-- Icono oficial para la ventana de Agregar/Quitar programas de Windows -->
+        <Icon Id="IconoApp" SourceFile="build/libs/icon.ico" />
+        <Property Id="ARPPRODUCTICON" Value="IconoApp" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+
+            <!-- Instalación en C:\Program Files\GestlabClient (64 bits) -->
+            <Directory Id="ProgramFiles64Folder">
+                <Directory Id="APPLICATIONFOLDER" Name="GestlabClient">
+
+                    <!-- Componente Principal: Archivos del Software -->
+                    <Component Id="ComponentePrincipal" Guid="a65b32e1-4512-4fbc-bc28-984cd12345ef" Win64="yes">
+
+                        <!-- Archivo JAR principal reconfigurado a un nombre estándar sin sufijo snapshot -->
+                        <File Id="ArchivoJar"
+                              Source="build/libs/Gestlab-Client-1.0-SNAPSHOT-all.jar"
+                              Name="GestlabClient.jar"
+                              KeyPath="yes" />
+
+                        <!-- Copia el archivo PNG que utiliza la app para su ejecución -->
+                        <File Id="ArchivoIconoPng"
+                              Source="build/libs/icon.png"
+                              Name="icon.png" />
+
+                        <!-- Acceso directo en el Escritorio -->
+                        <Shortcut Id="AccesoDirectoEscritorio"
+                                  Directory="DesktopFolder"
+                                  Name="Gestlab Client"
+                                  Target="javaw.exe"
+                                  Arguments="-jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
+                                  WorkingDirectory="APPLICATIONFOLDER"
+                                  Icon="IconoApp"
+                                  Advertise="no" />
+
+                        <!-- Acceso directo en el Menú Inicio -->
+                        <Shortcut Id="AccesoDirectoMenu"
+                                  Directory="ProgramMenuDir"
+                                  Name="Gestlab Client"
+                                  Target="[SystemFolder]javaw.exe"
+                                  Arguments="-jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
+                                  WorkingDirectory="APPLICATIONFOLDER"
+                                  Icon="IconoApp"
+                                  Advertise="no" />
+                    </Component>
+
+                    <!-- Componente para autostart al iniciar Windows -->
+                    <Component Id="ComponenteStartup" Guid="5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e" Win64="yes">
+                        <RegistryValue Root="HKCU"
+                                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                                       Name="GestlabClient"
+                                       Type="string"
+                                       Value="&quot;[SystemFolder]javaw.exe&quot; -jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
+                                       KeyPath="yes" />
+                    </Component>
+
+                </Directory>
+            </Directory>
+
+            <!-- Carpetas del Menú Inicio y Escritorio -->
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuDir" Name="Gestlab Client">
+                    <Component Id="ComponenteMenuInicio" Guid="1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d" Win64="yes">
+                        <RemoveFolder Id="BorrarProgramMenuDir" On="uninstall" />
+                        <RegistryValue Root="HKCU" Key="Software\Gestlab\Client" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+                    </Component>
+                </Directory>
+            </Directory>
+
+            <Directory Id="DesktopFolder" Name="Desktop" />
+
+        </Directory>
+
+        <Feature Id="MainFeature" Title="Instalacion Principal" Level="1">
+            <ComponentRef Id="ComponentePrincipal" />
+            <ComponentRef Id="ComponenteMenuInicio" />
+            <ComponentRef Id="ComponenteStartup" />
+        </Feature>
+
+    </Product>
+</Wix>

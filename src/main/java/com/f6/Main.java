@@ -24,8 +24,13 @@ import java.util.logging.SimpleFormatter;
 
 
 public class Main {
+
+
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
+
+
+
         try {
 
             FileHandler fileHandler = new FileHandler("app.log", true);
@@ -127,20 +132,71 @@ public class Main {
                 }
             });
 
-            // * Evento Registrar una huella
+//            // * Evento Registrar una huella
+//            socket.on("escaneoHuella", new Emitter.Listener() {
+//                @Override
+//                public void call(Object... objects) {
+//                    try {
+//                        // NestJS envía los datos en el primer argumento
+//                        Object data = objects[0];
+//                        String idUsuario = "";
+//
+//                        if (data instanceof JSONObject) {
+//                            // Si es JSONObject, extraemos con seguridad
+//                            idUsuario = String.valueOf(((JSONObject) data).get("idUsuario"));
+//                        } else if (data instanceof java.util.Map) {
+//                            // A veces Socket.io lo mapea automáticamente a un Map
+//                            idUsuario = String.valueOf(((java.util.Map) data).get("idUsuario"));
+//                        } else {
+//                            idUsuario = "desconocido";
+//                        }
+//
+//                        logger.info("Escaneando para usuario ID: " + idUsuario);
+//
+//                        // Realizar el escaneo síncrono[cite: 12]
+//                        String huella = Lector.scanFinger();
+////                        System.out.println(huella);
+//
+//                        if(huella.equalsIgnoreCase("Timeout: No se detectó huella")){
+//                            JSONObject response = new JSONObject();
+//                            response.put("idUsuario", idUsuario);
+//                            response.put("huella", huella);
+//                            response.put("status", "ERROR");
+////                            logger.info(response.toString());
+//                            socket.emit("createHuellaPreparador", response);
+////                            return;
+//                        }
+//
+//                         else if(!huella.isEmpty()){
+//                            JSONObject response = new JSONObject();
+//                            response.put("idUsuario", idUsuario);
+//                            response.put("huella", huella);
+//                            response.put("status", "OK");
+//                            socket.emit("createHuellaPreparador", response);
+//                        }
+//
+//
+//
+//
+//                    } catch (Exception e) {
+//                        logger.info("Error en el proceso de escaneo: " + e.getMessage());
+//                        // Enviar error al servidor para que no se quede colgado
+//                        socket.emit("createHuellaPreparadorError", e.getMessage());
+//                    }
+//                }
+//            });
+
+            // Reemplaza el bloque del evento "escaneoHuella" por este:
             socket.on("escaneoHuella", new Emitter.Listener() {
                 @Override
                 public void call(Object... objects) {
                     try {
-                        // NestJS envía los datos en el primer argumento
                         Object data = objects[0];
                         String idUsuario = "";
 
                         if (data instanceof JSONObject) {
-                            // Si es JSONObject, extraemos con seguridad
                             idUsuario = String.valueOf(((JSONObject) data).get("idUsuario"));
                         } else if (data instanceof java.util.Map) {
-                            // A veces Socket.io lo mapea automáticamente a un Map
                             idUsuario = String.valueOf(((java.util.Map) data).get("idUsuario"));
                         } else {
                             idUsuario = "desconocido";
@@ -148,35 +204,28 @@ public class Main {
 
                         logger.info("Escaneando para usuario ID: " + idUsuario);
 
-                        // Realizar el escaneo síncrono[cite: 12]
                         String huella = Lector.scanFinger();
-//                        System.out.println(huella);
+                        JSONObject response = new JSONObject();
+                        response.put("idUsuario", idUsuario);
+                        response.put("huella", huella);
 
-                        if(huella.equalsIgnoreCase("Timeout: No se detectó huella")){
-                            JSONObject response = new JSONObject();
-                            response.put("idUsuario", idUsuario);
-                            response.put("huella", huella);
+                        // Validar de forma integral si la respuesta es un mensaje de fallo
+                        if (huella == null || huella.isEmpty() || huella.startsWith("Error") || huella.startsWith("Timeout")) {
                             response.put("status", "ERROR");
-//                            logger.info(response.toString());
-                            socket.emit("createHuellaPreparador", response);
-//                            return;
-                        }
-
-                         else if(!huella.isEmpty()){
-                            JSONObject response = new JSONObject();
-                            response.put("idUsuario", idUsuario);
-                            response.put("huella", huella);
+                            logger.warning("Fallo en la captura de huella: " + huella);
+                        } else {
                             response.put("status", "OK");
-                            socket.emit("createHuellaPreparador", response);
+                            logger.info("Huella capturada correctamente para usuario " + idUsuario);
                         }
 
-
-
+                        socket.emit("createHuellaPreparador", response);
 
                     } catch (Exception e) {
-                        logger.info("Error en el proceso de escaneo: " + e.getMessage());
-                        // Enviar error al servidor para que no se quede colgado
-                        socket.emit("createHuellaPreparadorError", e.getMessage());
+                        logger.severe("Error en el proceso de escaneo: " + e.getMessage());
+                        JSONObject errorResponse = new JSONObject();
+                        errorResponse.put("status", "ERROR");
+                        errorResponse.put("huella", "Excepción: " + e.getMessage());
+                        socket.emit("createHuellaPreparador", errorResponse);
                     }
                 }
             });

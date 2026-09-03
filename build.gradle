@@ -50,6 +50,19 @@ jar {
     }
 }
 
+// Esto configura la ruta para CUALQUIER forma en la que se ejecute la app desde el IDE o Gradle
+tasks.withType(JavaExec) {
+    def osName = System.getProperty("os.name").toLowerCase()
+
+    if (osName.contains("linux")) {
+        // Obligamos a la JVM a leer las rutas del sistema que acabamos de indexar
+        systemProperty "java.library.path", "/usr/lib/x86_64-linux-gnu:/usr/lib"
+        environment "LD_LIBRARY_PATH", "/usr/lib/x86_64-linux-gnu:/usr/lib"
+    } else {
+        systemProperty "java.library.path", file("lib").absolutePath
+    }
+}
+
 test {
     useJUnitPlatform()
 }
