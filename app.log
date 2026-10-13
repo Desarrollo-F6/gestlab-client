@@ -23838,3 +23838,97 @@ sept 03, 2026 12:46:10 P. M. com.f6.Main$6 call
 INFORMACIÓN: Escaneando para usuario ID: 50
 sept 03, 2026 12:46:14 P. M. com.f6.Main$6 call
 INFORMACIÓN: Huella capturada correctamente para usuario 50
+oct. 13, 2026 10:27:14 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 10:27:14 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 10:27:14 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 10:34:30 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 10:34:35 A. M. com.f6.Main$6 call
+INFORMACIÓN: Huella capturada correctamente para usuario 51
+oct. 13, 2026 10:51:03 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 10:51:04 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 10:51:04 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 10:58:30 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 10:58:33 A. M. com.f6.Main$6 call
+ADVERTENCIA: Fallo en la captura de huella: 
+oct. 13, 2026 10:59:00 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 10:59:03 A. M. com.f6.Main$6 call
+ADVERTENCIA: Fallo en la captura de huella: 
+oct. 13, 2026 11:08:38 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 11:08:38 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 11:08:38 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 11:10:37 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 11:10:39 A. M. com.f6.Main$6 call
+INFORMACIÓN: Huella capturada correctamente para usuario 51
+oct. 13, 2026 11:10:55 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 11:11:00 A. M. com.f6.Main$6 call
+INFORMACIÓN: Huella capturada correctamente para usuario 51
+oct. 13, 2026 11:12:01 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 11:12:14 A. M. com.f6.Main$6 call
+ADVERTENCIA: Fallo en la captura de huella: Timeout: No se detectó huella
+oct. 13, 2026 11:12:31 A. M. com.f6.Main$7 call
+INFORMACIÓN: Inicio la comparacion de huellas
+oct. 13, 2026 11:12:31 A. M. com.f6.Main$7 call
+INFORMACIÓN: 51 preparador
+oct. 13, 2026 11:32:27 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 11:32:27 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 11:32:27 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 11:32:35 A. M. com.f6.Main$7 call
+INFORMACIÓN: Inicio la comparacion de huellas
+oct. 13, 2026 11:32:35 A. M. com.f6.Main$7 call
+INFORMACIÓN: 51 preparador
+oct. 13, 2026 11:51:18 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 11:51:18 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 11:51:18 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 11:51:26 A. M. com.f6.Main$7 call
+INFORMACIÓN: Inicio la comparacion de huellas
+oct. 13, 2026 11:51:26 A. M. com.f6.Main$7 call
+INFORMACIÓN: 51 preparador
+oct. 13, 2026 11:58:03 A. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 11:58:03 A. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 11:58:03 A. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 11:59:26 A. M. com.f6.Main$7 call
+INFORMACIÓN: Inicio la comparacion de huellas
+oct. 13, 2026 11:59:26 A. M. com.f6.Main$7 call
+INFORMACIÓN: 51 preparador
+oct. 13, 2026 11:59:53 A. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 11:59:56 A. M. com.f6.Main$6 call
+INFORMACIÓN: Huella capturada correctamente para usuario 51
+oct. 13, 2026 12:00:20 P. M. com.f6.Main$6 call
+INFORMACIÓN: Escaneando para usuario ID: 51
+oct. 13, 2026 12:00:34 P. M. com.f6.Main$6 call
+ADVERTENCIA: Fallo en la captura de huella: Timeout: No se detectó huella
+oct. 13, 2026 12:03:51 P. M. com.f6.Main main
+INFORMACIÓN: Activado el SystemTray
+oct. 13, 2026 12:03:51 P. M. com.f6.Main main
+INFORMACIÓN: Conexion exitosa: io.socket.client.Manager@4520ebad
+oct. 13, 2026 12:03:51 P. M. com.f6.Main main
+INFORMACIÓN: Check-in event emitted with machine name: DESKTOP-MHK6LOG
+oct. 13, 2026 12:04:07 P. M. com.f6.Main$7 call
+INFORMACIÓN: Inicio la comparacion de huellas
+oct. 13, 2026 12:04:07 P. M. com.f6.Main$7 call
+INFORMACIÓN: 51 preparador

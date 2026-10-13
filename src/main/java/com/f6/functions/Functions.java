@@ -1,16 +1,12 @@
 package com.f6.functions;
 
+import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import javax.swing.JOptionPane;
 
 public class Functions {
 
     private static TrayIcon trayIcon;
-
-
-
 
     public Functions() {
         if (SystemTray.isSupported()) {
@@ -42,10 +38,6 @@ public class Functions {
 
         }
     }
-
-
-
-
 
     // Apagado de computadora
     public static void apagarComputadora() throws IOException {
@@ -82,28 +74,6 @@ public class Functions {
     public void ejecutarComandoPowershell(String comando) throws IOException {
         Runtime.getRuntime().exec("powershell.exe " + comando);
     }
-
-
-
-
-    /*
-    // Method 1: Force shutdown this computer
-    public void apagarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /s /f /t 0");
-    }
-
-    // Method 2: Force restart this computer
-    public void reiniciarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /r /f /t 0");
-    }
-
-    // Method 3: Lock the computer as if using Windows + L
-    public void bloquearComputadora() throws IOException {
-        Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
-    }
-
-
-    */
 
 
 }
