@@ -1,7 +1,10 @@
 package com.f6.functions;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.io.IOException;
 
 public class Functions {
@@ -23,6 +26,7 @@ public class Functions {
         }
     }
 
+    /*
     public void mostrarNotifiacionPrueba(String mensaje) throws Exception{
         if(SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
@@ -37,21 +41,6 @@ public class Functions {
             trayIcon.displayMessage("Mensaje Prueba", mensaje, TrayIcon.MessageType.INFO);
 
         }
-    }
-
-    // Apagado de computadora
-    public static void apagarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /s /f /t 0");
-    }
-
-    // Reinicio de computadora
-    public static void reiniciarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /r /f /t 0");
-    }
-
-    // Bloqueo de computadora
-    public static void bloquearComputadora() throws IOException {
-        Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
     }
 
     // Method 4: Show a message using Windows notifications
@@ -69,9 +58,27 @@ public class Functions {
         }
         return mensaje;
     }
+    */
 
-    // Method 5: Execute a command in PowerShell
-    public void ejecutarComandoPowershell(String comando) throws IOException {
+
+    // Apagado de computadora
+    public static void apagarComputadora() throws IOException {
+        Runtime.getRuntime().exec("shutdown /s /f /t 0");
+    }
+
+    // Reinicio de computadora
+    public static void reiniciarComputadora() throws IOException {
+        Runtime.getRuntime().exec("shutdown /r /f /t 0");
+    }
+
+    // Bloqueo de computadora
+    public static void bloquearComputadora() throws IOException {
+        Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
+    }
+
+    // Ejecutar Powershell
+    public static void ejecutarComandoPowershell(String comando) throws IOException {
+        // JOptionPane.showMessageDialog(null, comando, "Comando recibido", JOptionPane.INFORMATION_MESSAGE);
         Runtime.getRuntime().exec("powershell.exe " + comando);
     }
 

@@ -1,20 +1,25 @@
 package com.f6;
 
-import com.f6.functions.Functions;
-import com.f6.functions.Lector;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import javax.swing.JOptionPane;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.f6.functions.Functions;
+import com.f6.functions.Lector;
+
+import io.socket.client.IO;
+import io.socket.emitter.Emitter;
 
 
 public class Main {
@@ -46,9 +51,9 @@ public class Main {
             logger.info("Activado el SystemTray");
 
             //Cambiar segun se necesite
-           final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
+            final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
             // final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
-//            final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
+            // final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
 
 
 
@@ -59,8 +64,8 @@ public class Main {
             JSONObject json = new JSONObject();
             json.put("name", machineName);
 
-
             logger.info("Check-in event emitted with machine name: " + machineName);
+
 
 
             // * Evento pcCheck
@@ -78,29 +83,6 @@ public class Main {
                 }
             });
 
-            // * Evento Bloqueo Equipo
-            socket.on("pcBloqueoObjetivo", new Emitter.Listener() {
-                @Override
-                public void call(Object... objects) {
-                    try{
-                        Functions.bloquearComputadora();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            // * Evento Reinicio Equipo
-            socket.on("pcReinicioObjetivo", new Emitter.Listener() {
-                @Override
-                public void call(Object... objects) {
-                    try{
-                        Functions.reiniciarComputadora();
-                    } catch (RuntimeException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
 
             // * Evento Apagado Computadora
             socket.on("pcApagadoObjetivo", new Emitter.Listener() {
@@ -125,6 +107,33 @@ public class Main {
                     }
                 }
             });
+
+
+            // * Evento Bloqueo Equipo
+            socket.on("pcBloqueoObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.bloquearComputadora();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            // * Evento Powershell Equipo
+            socket.on("pcComandoObjetivo", new Emitter.Listener() {
+                @Override
+                public void call(Object... objects) {
+                    try{
+                        Functions.ejecutarComandoPowershell((String) objects[0]);
+                    } catch (RuntimeException | IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
 
             // * Evento para registrar la huella
             socket.on("escaneoHuella", new Emitter.Listener() {
@@ -206,6 +215,7 @@ public class Main {
             });
 
             socket.connect();
+
         }catch (IOException e) {
             logger.severe("Error setting up logger: " + e.getMessage());
             e.printStackTrace();
