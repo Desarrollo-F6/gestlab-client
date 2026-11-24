@@ -1,86 +1,43 @@
 package com.f6.functions;
 
-import java.awt.AWTException;
-import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
 import java.io.IOException;
 
+import org.tinylog.Logger;
+
+/** Acciones sobre el equipo local (apagado, reinicio, bloqueo, PowerShell). */
 public class Functions {
 
-    private static TrayIcon trayIcon;
+    private final CommandRunner runner;
 
-    public Functions() {
-        if (SystemTray.isSupported()) {
-            SystemTray tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().createImage("icon.png"); // Replace with your icon path
-            trayIcon = new TrayIcon(image, "Order Computer Listener");
-            trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip("Order Computer Listener");
-            try {
-                tray.add(trayIcon);
-            } catch (AWTException e) {
-                e.printStackTrace();
-            }
-        }
+    public Functions(CommandRunner runner) {
+        this.runner = runner;
     }
-
-    /*
-    public void mostrarNotifiacionPrueba(String mensaje) throws Exception{
-        if(SystemTray.isSupported()) {
-            SystemTray tray = SystemTray.getSystemTray();
-
-            Image image = Toolkit.getDefaultToolkit().createImage("icon.png"); // Replace with your icon path
-            TrayIcon trayIcon = new TrayIcon(image, "Mensaje Prueba");
-
-            trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip("Mensaje Prueba");
-            tray.add(trayIcon);
-
-            trayIcon.displayMessage("Mensaje Prueba", mensaje, TrayIcon.MessageType.INFO);
-
-        }
-    }
-
-    // Method 4: Show a message using Windows notifications
-    public static String mostrarMensaje(String mensaje) throws IOException {
-        //String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
-        String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
-        Runtime.getRuntime().exec(exePath + " a asdasdasd");
-
-
-        // Display the message using JOptionPane
-        JOptionPane.showMessageDialog(null, mensaje, "Notification", JOptionPane.INFORMATION_MESSAGE);
-        if (trayIcon != null) {
-            JOptionPane.showMessageDialog(null, "NOSE", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            EventQueue.invokeLater(() -> trayIcon.displayMessage("Notification", mensaje, TrayIcon.MessageType.INFO));
-        }
-        return mensaje;
-    }
-    */
-
 
     // Apagado de computadora
-    public static void apagarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /s /f /t 0");
+    public void apagarComputadora() throws IOException {
+        Logger.info("Apagando el equipo");
+        runner.run("shutdown", "/s", "/f", "/t", "0");
     }
 
     // Reinicio de computadora
-    public static void reiniciarComputadora() throws IOException {
-        Runtime.getRuntime().exec("shutdown /r /f /t 0");
+    public void reiniciarComputadora() throws IOException {
+        Logger.info("Reiniciando el equipo");
+        runner.run("shutdown", "/r", "/f", "/t", "0");
     }
 
     // Bloqueo de computadora
-    public static void bloquearComputadora() throws IOException {
-        Runtime.getRuntime().exec("rundll32.exe user32.dll,LockWorkStation");
+    public void bloquearComputadora() throws IOException {
+        Logger.info("Bloqueando el equipo");
+        runner.run("rundll32.exe", "user32.dll,LockWorkStation");
     }
 
     // Ejecutar Powershell
-    public static void ejecutarComandoPowershell(String comando) throws IOException {
-        // JOptionPane.showMessageDialog(null, comando, "Comando recibido", JOptionPane.INFORMATION_MESSAGE);
-        Runtime.getRuntime().exec("powershell.exe " + comando);
+    public void ejecutarComandoPowershell(String comando) throws IOException {
+        if (comando == null || comando.trim().isEmpty()) {
+            Logger.warn("Comando PowerShell vacio, se ignora");
+            return;
+        }
+        Logger.info("Ejecutando comando PowerShell remoto");
+        runner.run("powershell.exe", "-NoProfile", "-NonInteractive", "-Command", comando);
     }
-
-
 }

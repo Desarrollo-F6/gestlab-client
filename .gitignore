@@ -40,3 +40,13 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+### Artefactos generados / binarios (no versionar) ###
+*.msi
+*.wixobj
+*.wixpdb
+/Gestlab-Client.jar
+*.log
+*.log.lck
+hs_err_pid*.log
+messageNotilab.exe
+gestlab.properties
