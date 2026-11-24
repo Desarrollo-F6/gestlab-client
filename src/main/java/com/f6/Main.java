@@ -46,9 +46,9 @@ public class Main {
             logger.info("Activado el SystemTray");
 
             //Cambiar segun se necesite
-           final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
-            // final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
-//            final Socket socket = IO.socket("https://qr6b5gw0-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
+             final Socket socket = IO.socket("https://notilab.urbe.edu"); //websocket produccion
+             //final Socket socket = IO.socket("http://localhost:3000"); //websocket local f6 pc desarrollo
+             //final Socket socket = IO.socket("https://xft7m4n3-3000.use2.devtunnels.ms/"); //Websocket llamado desde el cliente
 
 
 

@@ -1,17 +1,18 @@
 package com.f6.functions;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class Functions {
+import javax.swing.*;
 
+public class Functions {
     private static TrayIcon trayIcon;
 
     public Functions() {
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().createImage("icon.png"); // Replace with your icon path
+            Image image = Toolkit.getDefaultToolkit().createImage(
+                    "icon.png"); // Replace with your icon path
             trayIcon = new TrayIcon(image, "Order Computer Listener");
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip("Order Computer Listener");
@@ -23,19 +24,20 @@ public class Functions {
         }
     }
 
-    public void mostrarNotifiacionPrueba(String mensaje) throws Exception{
-        if(SystemTray.isSupported()) {
+    public void mostrarNotifiacionPrueba(String mensaje) throws Exception {
+        if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
 
-            Image image = Toolkit.getDefaultToolkit().createImage("icon.png"); // Replace with your icon path
+            Image image = Toolkit.getDefaultToolkit().createImage(
+                    "icon.png"); // Replace with your icon path
             TrayIcon trayIcon = new TrayIcon(image, "Mensaje Prueba");
 
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip("Mensaje Prueba");
             tray.add(trayIcon);
 
-            trayIcon.displayMessage("Mensaje Prueba", mensaje, TrayIcon.MessageType.INFO);
-
+            trayIcon.displayMessage(
+                    "Mensaje Prueba", mensaje, TrayIcon.MessageType.INFO);
         }
     }
 
@@ -56,16 +58,22 @@ public class Functions {
 
     // Method 4: Show a message using Windows notifications
     public static String mostrarMensaje(String mensaje) throws IOException {
-        //String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
-        String exePath = "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
+        // String exePath = "C:\\Program
+        // Files\\GestlabClient\\app\\messageNotilab.exe";
+        String exePath =
+                "C:\\Program Files\\GestlabClient\\app\\messageNotilab.exe";
         Runtime.getRuntime().exec(exePath + " a asdasdasd");
 
-
         // Display the message using JOptionPane
-        JOptionPane.showMessageDialog(null, mensaje, "Notification", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(
+                null, mensaje, "Notification", JOptionPane.INFORMATION_MESSAGE);
         if (trayIcon != null) {
-            JOptionPane.showMessageDialog(null, "NOSE", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            EventQueue.invokeLater(() -> trayIcon.displayMessage("Notification", mensaje, TrayIcon.MessageType.INFO));
+            JOptionPane.showMessageDialog(null, "NOSE", "Notification",
+                    JOptionPane.INFORMATION_MESSAGE);
+            EventQueue.invokeLater(
+                    ()
+                            -> trayIcon.displayMessage("Notification", mensaje,
+                            TrayIcon.MessageType.INFO));
         }
         return mensaje;
     }
@@ -74,6 +82,4 @@ public class Functions {
     public void ejecutarComandoPowershell(String comando) throws IOException {
         Runtime.getRuntime().exec("powershell.exe " + comando);
     }
-
-
 }
