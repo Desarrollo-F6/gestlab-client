@@ -2,7 +2,7 @@
 <Wix xmlns="http://microsoft.com/wix/2006/wi">
 
     <Product Name="Gestlab Client"
-             Id="da3f18e2-c518-4903-883a-861053a4792f"
+             Id="*"
              UpgradeCode="c871dfa5-671e-4b68-b715-db8754b23114"
              Language="1033"
              Version="1.0.0"
@@ -11,8 +11,16 @@
         <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
         <Media Id="1" Cabinet="gabinete.cab" EmbedCab="yes" />
 
+        <!-- ProductCode autogenerado (Id="*"): cada MSI nuevo reemplaza al anterior. Subir Version en cada release. -->
+        <MajorUpgrade DowngradeErrorMessage="Ya hay instalada una version mas nueva de Gestlab Client." />
+
+        <!-- Ruta a javaw.exe. Por defecto System32 (64 bits); sobreescribible:
+             msiexec /i GestlabClient.msi JAVAW="C:\Program Files\Java\jre1.8.0_xxx\bin\javaw.exe" -->
+        <Property Id="JAVAW" Secure="yes" />
+        <SetProperty Id="JAVAW" Value="[System64Folder]javaw.exe" Before="CostFinalize" Sequence="both">NOT JAVAW</SetProperty>
+
         <!-- Icono oficial para la ventana de Agregar/Quitar programas de Windows -->
-        <Icon Id="IconoApp" SourceFile="build/libs/icon.ico" />
+        <Icon Id="IconoApp" SourceFile="icon.ico" />
         <Property Id="ARPPRODUCTICON" Value="IconoApp" />
 
         <Directory Id="TARGETDIR" Name="SourceDir">
@@ -30,16 +38,12 @@
                               Name="GestlabClient.jar"
                               KeyPath="yes" />
 
-                        <!-- Copia el archivo PNG que utiliza la app para su ejecución -->
-                        <File Id="ArchivoIconoPng"
-                              Source="build/libs/icon.png"
-                              Name="icon.png" />
 
                         <!-- Acceso directo en el Escritorio -->
                         <Shortcut Id="AccesoDirectoEscritorio"
                                   Directory="DesktopFolder"
                                   Name="Gestlab Client"
-                                  Target="javaw.exe"
+                                  Target="[JAVAW]"
                                   Arguments="-jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
                                   WorkingDirectory="APPLICATIONFOLDER"
                                   Icon="IconoApp"
@@ -49,20 +53,20 @@
                         <Shortcut Id="AccesoDirectoMenu"
                                   Directory="ProgramMenuDir"
                                   Name="Gestlab Client"
-                                  Target="[SystemFolder]javaw.exe"
+                                  Target="[JAVAW]"
                                   Arguments="-jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
                                   WorkingDirectory="APPLICATIONFOLDER"
                                   Icon="IconoApp"
                                   Advertise="no" />
                     </Component>
 
-                    <!-- Componente para autostart al iniciar Windows -->
+                    <!-- Autostart para TODOS los usuarios (instalacion perMachine => HKLM) -->
                     <Component Id="ComponenteStartup" Guid="5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e" Win64="yes">
-                        <RegistryValue Root="HKCU"
+                        <RegistryValue Root="HKLM"
                                        Key="Software\Microsoft\Windows\CurrentVersion\Run"
                                        Name="GestlabClient"
                                        Type="string"
-                                       Value="&quot;[SystemFolder]javaw.exe&quot; -jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
+                                       Value="&quot;[JAVAW]&quot; -jar &quot;[APPLICATIONFOLDER]GestlabClient.jar&quot;"
                                        KeyPath="yes" />
                     </Component>
 
@@ -74,7 +78,7 @@
                 <Directory Id="ProgramMenuDir" Name="Gestlab Client">
                     <Component Id="ComponenteMenuInicio" Guid="1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d" Win64="yes">
                         <RemoveFolder Id="BorrarProgramMenuDir" On="uninstall" />
-                        <RegistryValue Root="HKCU" Key="Software\Gestlab\Client" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+                        <RegistryValue Root="HKLM" Key="Software\Gestlab\Client" Name="installed" Type="integer" Value="1" KeyPath="yes" />
                     </Component>
                 </Directory>
             </Directory>

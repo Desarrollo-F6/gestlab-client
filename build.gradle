@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '9.2.2'
 }
 
 group = 'com.f6'
@@ -9,60 +9,52 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs 'lib'
-    }
 }
 
+configurations {
+    mockitoAgent
+}
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'io.socket:socket.io-client:2.0.1'
     implementation 'org.json:json:20210307'
 
-    implementation 'com.machinezoo.sourceafis:sourceafis:3.18.1'
+    // Logging
+    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation 'org.tinylog:tinylog-impl:2.7.0'
 
-    // Dependencia captahuellas ZKTeco[cite: 14]
-    // Si tienes el JAR en la carpeta /lib, Gradle lo detectará por nombre y versión
-    implementation 'com.zkteco:zkfinger:2.0'
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
+    mockitoAgent('org.mockito:mockito-core:5.20.0') { transitive = false }
+}
+
+// El cliente se despliega en los laboratorios con Java 8: el bytecode de produccion se mantiene en 8.
+tasks.named('compileJava') {
+    options.release = 8
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:-options'
+}
+
+// Los tests solo corren en la maquina de desarrollo/CI (Mockito 5 requiere Java 11+).
+tasks.named('compileTestJava') {
+    options.release = 17
+    options.encoding = 'UTF-8'
 }
 
 application {
-    mainClassName = 'com.f6.Main'
+    mainClass = 'com.f6.Main'
 }
 
 jar {
     manifest {
-        attributes(
-                'Main-Class': 'com.f6.Main'
-        )
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
-    // Incluir recursos en el JAR
-    from {
-        fileTree('src/main/resources') {
-            include '**/*'
-        }
-    }
-}
-
-// Esto configura la ruta para CUALQUIER forma en la que se ejecute la app desde el IDE o Gradle
-tasks.withType(JavaExec) {
-    def osName = System.getProperty("os.name").toLowerCase()
-
-    if (osName.contains("linux")) {
-        // Obligamos a la JVM a leer las rutas del sistema que acabamos de indexar
-        systemProperty "java.library.path", "/usr/lib/x86_64-linux-gnu:/usr/lib"
-        environment "LD_LIBRARY_PATH", "/usr/lib/x86_64-linux-gnu:/usr/lib"
-    } else {
-        systemProperty "java.library.path", file("lib").absolutePath
+        attributes('Main-Class': 'com.f6.Main')
     }
 }
 
 test {
     useJUnitPlatform()
+    jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}"
 }
